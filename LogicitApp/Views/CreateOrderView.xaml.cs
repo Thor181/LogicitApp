@@ -1,8 +1,5 @@
-﻿using HandyControl.Tools;
-using LogicitApp.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,15 +15,11 @@ using System.Windows.Shapes;
 
 namespace LogicitApp.Views
 {
-    /// <summary>
-    /// Логика взаимодействия для MainView.xaml
-    /// </summary>
-    public partial class MainView : UserControl
+    public partial class CreateOrderView : UserControl
     {
-        public MainView()
+        public CreateOrderView()
         {
             InitializeComponent();
-
         }
     }
 }

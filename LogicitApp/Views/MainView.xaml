@@ -1,12 +1,84 @@
 ﻿<UserControl x:Class="LogicitApp.Views.MainView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:LogicitApp.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             xmlns:viewModel="clr-namespace:LogicitApp.ViewModels"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Name="MainViewX">
+    <UserControl.DataContext>
+        <viewModel:MainViewModel />
+    </UserControl.DataContext>
+    <Grid d:Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="9*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Создать заказ"
+                    Command="{Binding CreateCommand}"
+                    Style="{StaticResource ButtonPrimary}"
+                    Margin="5 0 0 0"></Button>
+        </StackPanel>
+
+        <ScrollViewer ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      Grid.Row="1">
+
+            <DataGrid x:Name="OrdersDataGrid"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Orders}"
+                      RowHeight="100"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id"
+                                        Binding="{Binding Id}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Товары"
+                                        Binding="{Binding Products}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Клиент"
+                                        Binding="{Binding Client}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Статус"
+                                        Binding="{Binding Status}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Дата заказа"
+                                        Binding="{Binding CreatedDatetime}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Дата доставки"
+                                        Binding="{Binding DeliveryDatetime}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Адрес доставки"
+                                        Binding="{Binding DeliveryAddress}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Водитель"
+                                        Binding="{Binding Driver}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Транспорт"
+                                        Binding="{Binding Transport}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Сумма"
+                                        Binding="{Binding Sum}"></DataGridTextColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Button Width="110"
+                                            Content="Редактировать"
+                                            Command="{Binding ElementName=MainViewX, Path=DataContext.EditCommand}"
+                                            Style="{StaticResource ButtonPrimary}"></Button>
+                                    <Button Width="110"
+                                            Content="Удалить"
+                                            Margin="0 5 0 0"
+                                            Command="{Binding ElementName=MainViewX, Path=DataContext.DeleteCommand}"
+                                            CommandParameter="{Binding Id}"
+                                            Style="{StaticResource ButtonDanger}"></Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace LogicitApp.Stuff.Commands
+namespace LogicitApp.Shared.Commands
 {
     public class SimpleCommand : ICommand
     {
