@@ -8,18 +8,30 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="900">
+             d:DesignWidth="900"
+             Name="CreateOrderViewX">
+
     <UserControl.DataContext>
         <viewModel:CreateOrderViewModel />
     </UserControl.DataContext>
-    <Grid d:Background="Wheat">
+
+    <Grid d:Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="40" />
+        </Grid.ColumnDefinitions>
 
-        <Button Background="Transparent"
+        <Button Grid.Column="99"
+                Grid.Row="0"
+                Background="Transparent"
                 BorderThickness="0"
                 Padding="0"
                 VerticalAlignment="Top"
@@ -31,69 +43,216 @@
             </Button.Content>
         </Button>
 
-        <StackPanel Orientation="Horizontal"
-                    Grid.Row="0">
-            <hc:ComboBox Width="200"
-                         Height="60"
-                         Margin="5 0 0 0"
-                         DisplayMemberPath="OrganizationName"
-                         ItemsSource="{Binding Clients}"
-                         hc:InfoElement.TitleWidth="140"
-                         hc:InfoElement.TitlePlacement="Top"
-                         hc:InfoElement.Title="Клиент"
-                         hc:InfoElement.Necessary="True"></hc:ComboBox>
-            <hc:ComboBox Width="200"
-                         Height="60"
-                         Margin="5 0 0 0"
-                         ItemsSource="{Binding Statuses}"
-                         hc:InfoElement.TitleWidth="140"
-                         hc:InfoElement.TitlePlacement="Top"
-                         hc:InfoElement.Title="Статус"
-                         hc:InfoElement.Necessary="True"></hc:ComboBox>
-            <hc:DateTimePicker Width="200"
-                               Height="60"
-                               ShowClearButton="True"
-                               Style="{StaticResource DateTimePickerExtend}"
-                               hc:InfoElement.Title="Дата заказа"
-                               hc:InfoElement.Necessary="True"
-                               Language="Ru-Ru"
-                               Margin="5 0 0 0" />
-        </StackPanel>
+        <Image Source="pack://application:,,,/Resources/order.png"
+               Grid.Column="0"
+               Grid.Row="0"
+               Width="32"
+               Height="32" />
 
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal">
-            <hc:TextBox Width="200"
-                        Height="60"
-                        hc:InfoElement.ShowClearButton="True"
-                        hc:InfoElement.Title="Адрес доставки"
-                        hc:InfoElement.Necessary="True"
-                        Margin="5 0 0 0" />
-            <hc:DateTimePicker Width="200"
-                               Height="60"
-                               ShowClearButton="True"
-                               Style="{StaticResource DateTimePickerExtend}"
-                               hc:InfoElement.Title="Дата доставки"
-                               hc:InfoElement.Necessary="True"
-                               Margin="5 0 0 0" />
-            <hc:ComboBox Width="200"
-                         Height="60"
-                         Margin="5 0 0 0"
-                         ItemsSource="{Binding Drivers}"
-                         DisplayMemberPath="FullName"
-                         hc:InfoElement.TitleWidth="140"
-                         hc:InfoElement.TitlePlacement="Top"
-                         hc:InfoElement.Title="Водитель"
-                         hc:InfoElement.Necessary="True"></hc:ComboBox>
-            <hc:ComboBox Width="200"
-                         Height="60"
-                         Margin="5 0 0 0"
-                         ItemsSource="{Binding Transports}"
-                         DisplayMemberPath="Brand"
-                         hc:InfoElement.TitleWidth="140"
-                         hc:InfoElement.TitlePlacement="Top"
-                         hc:InfoElement.Title="Транспорт"
-                         hc:InfoElement.Necessary="True" ></hc:ComboBox>
-        </StackPanel>
+        <TextBlock Text="Заказ"
+                   Grid.Column="1"
+                   Grid.Row="0"
+                   Margin="5 0 0 0"
+                   FontSize="28" />
 
+        <Grid Grid.Column="1"
+              Grid.Row="1">
+
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Stretch"
+                        Grid.Row="0"
+                        Margin="15 0">
+
+                <hc:ComboBox Height="60"
+                             DisplayMemberPath="OrganizationName"
+                             ItemsSource="{Binding Clients}"
+                             hc:InfoElement.TitleWidth="140"
+                             hc:InfoElement.TitlePlacement="Top"
+                             hc:InfoElement.Title="Клиент"
+                             hc:InfoElement.Necessary="True"
+                             SelectedItem="{Binding SelectedClient}" />
+
+                <hc:ComboBox Height="60"
+                             ItemsSource="{Binding Statuses}"
+                             hc:InfoElement.TitleWidth="140"
+                             hc:InfoElement.TitlePlacement="Top"
+                             hc:InfoElement.Title="Статус"
+                             hc:InfoElement.Necessary="True"
+                             SelectedItem="{Binding SelectedStatus}" />
+
+                <hc:DateTimePicker Height="60"
+                                   ShowClearButton="True"
+                                   Style="{StaticResource DateTimePickerExtend}"
+                                   hc:InfoElement.Title="Дата заказа"
+                                   hc:InfoElement.Necessary="True"
+                                   SelectedDateTime="{Binding SelectedCreatedDatetime}" />
+            </StackPanel>
+        </Grid>
+
+        <Image Source="pack://application:,,,/Resources/delivery.png"
+               Grid.Column="0"
+               Grid.Row="2"
+               Width="35"
+               Height="35" />
+        <TextBlock Text="Доставка"
+                   Grid.Column="1"
+                   Grid.Row="2"
+                   Margin="5 0 0 0"
+                   FontSize="28" />
+
+        <Grid Grid.Column="1"
+              Grid.Row="3"
+              Grid.RowSpan="2">
+            <Grid HorizontalAlignment="Stretch">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            Margin="5">
+
+                    <hc:TextBox Height="60"
+                                hc:InfoElement.ShowClearButton="True"
+                                hc:InfoElement.Title="Адрес доставки"
+                                hc:InfoElement.Necessary="True"
+                                Text="{Binding SelectedAddress}" />
+
+                    <hc:DateTimePicker Height="60"
+                                       ShowClearButton="True"
+                                       Style="{StaticResource DateTimePickerExtend}"
+                                       hc:InfoElement.Title="Дата доставки"
+                                       hc:InfoElement.Necessary="True"
+                                       SelectedDateTime="{Binding SelectedDeliveryDatetime}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1"
+                            Margin="5">
+
+                    <hc:ComboBox Height="60"
+                                 ItemsSource="{Binding Drivers}"
+                                 DisplayMemberPath="FullName"
+                                 hc:InfoElement.TitleWidth="140"
+                                 hc:InfoElement.TitlePlacement="Top"
+                                 hc:InfoElement.Title="Водитель"
+                                 hc:InfoElement.Necessary="True"
+                                 SelectedItem="{Binding SelectedDriver}" />
+
+                    <hc:ComboBox Height="60"
+                                 ItemsSource="{Binding Transports}"
+                                 hc:InfoElement.TitleWidth="140"
+                                 hc:InfoElement.TitlePlacement="Top"
+                                 hc:InfoElement.Title="Транспорт"
+                                 hc:InfoElement.Necessary="True"
+                                 SelectedItem="{Binding SelectedTransport}">
+                        <hc:ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding Brand}"></Run>
+                                    <Run Text="{Binding Model}"></Run>
+                                    <Run Text="{Binding PlateNumber, StringFormat=({0})}"></Run>
+                                </TextBlock>
+                            </DataTemplate>
+                        </hc:ComboBox.ItemTemplate>
+                    </hc:ComboBox>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Column="2"
+                Grid.Row="1"
+                Grid.RowSpan="4"
+                CornerRadius="8"
+                Background="White"
+                Margin="5 5 5 8">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="25"
+                                  ShadowDepth="1"
+                                  Opacity="0.5" />
+            </Border.Effect>
+
+            <!--PRODUCTS LIST-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <!--PRODUCTS LIST HEADER-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="50" />
+                    </Grid.ColumnDefinitions>
+
+                    <hc:ComboBox Grid.Column="0"
+                                 Height="30"
+                                 Margin="7 2 2 2"
+                                 DisplayMemberPath="Name"
+                                 ItemsSource="{Binding Products}"
+                                 SelectedItem="{Binding SelectedProduct}">
+                    </hc:ComboBox>
+
+                    <Button Grid.Column="1"
+                            Margin="2"
+                            Height="30"
+                            Width="30"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            FontSize="25"
+                            Content="+"
+                            Padding="-1 -7 0 0"
+                            Command="{Binding AddProductCommand}" />
+                </Grid>
+
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding SelectedProducts}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Наименование"
+                                            Width="1*"
+                                            Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Цена"
+                                            Width="1*"
+                                            Binding="{Binding Price}" />
+                        <DataGridTemplateColumn Width="1*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Удалить"
+                                            Style="{StaticResource ButtonDanger}"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.RemoveProductCommand}"
+                                            CommandParameter="{Binding Id}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Сумма:"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               FontSize="19" />
+                    <TextBox Text="{Binding SelectedSum, Mode=OneWay}"
+                             d:Text="112312312.00"
+                             FontSize="15"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Stretch"
+                             Margin="5"
+                             Grid.Column="1"
+                             IsReadOnly="True" />
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

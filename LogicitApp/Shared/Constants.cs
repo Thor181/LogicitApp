@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicitApp.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,9 @@ namespace LogicitApp.Shared
     {
         public static List<string> Statuses { get; set; } = new List<string>()
         {
-            "Выполнен", "В процессе", "Ожидание выполнения"
+            Shared.Statuses.Completed.AsString(), 
+            Shared.Statuses.InProcess.AsString(), 
+            Shared.Statuses.AwaitComplete.AsString()
         };
     }
 }

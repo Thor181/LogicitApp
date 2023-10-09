@@ -9,13 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\delivery.png" />
     <None Remove="Resources\edit.png" />
     <None Remove="Resources\exit.png" />
+    <None Remove="Resources\order.png" />
+    <None Remove="Resources\plus.png" />
     <None Remove="Resources\trash.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="HandyControl" Version="3.4.0" />
+    <PackageReference Include="HandyControl.Lang.ru" Version="3.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
@@ -26,10 +30,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\delivery.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\edit.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\exit.png" />
+    <Resource Include="Resources\order.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\plus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\trash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
