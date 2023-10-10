@@ -29,19 +29,39 @@
             <ColumnDefinition Width="40" />
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="99"
-                Grid.Row="0"
-                Background="Transparent"
-                BorderThickness="0"
-                Padding="0"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Command="{Binding ExitCommand}"
-                Margin="5">
-            <Button.Content>
-                <Image Source="pack://application:,,,/Resources/exit.png"></Image>
-            </Button.Content>
-        </Button>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="99"
+                    Grid.Row="0"
+                    Margin="-40 0 0 0">
+
+            <!--SAVE-->
+            <Button Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Command="{Binding SaveCommand}"
+                    Margin="5"
+                    Cursor="Hand">
+                <Button.Content>
+                    <Image Source="pack://application:,,,/Resources/save.png" />
+                </Button.Content>
+                
+            </Button>
+
+            <!--EXIT-->
+            <Button Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Command="{Binding ExitCommand}"
+                    Margin="5">
+                <Button.Content>
+                    <Image Source="pack://application:,,,/Resources/exit.png"></Image>
+                </Button.Content>
+            </Button>
+        </StackPanel>
 
         <Image Source="pack://application:,,,/Resources/order.png"
                Grid.Column="0"
@@ -164,7 +184,7 @@
                 Grid.RowSpan="4"
                 CornerRadius="8"
                 Background="White"
-                Margin="5 5 5 8">
+                Margin="5 5 5 23">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="25"
                                   ShadowDepth="1"

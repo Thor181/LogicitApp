@@ -66,6 +66,7 @@
                                     <Button Width="110"
                                             Content="Редактировать"
                                             Command="{Binding ElementName=MainViewX, Path=DataContext.EditCommand}"
+                                            CommandParameter="{Binding Id}"
                                             Style="{StaticResource ButtonPrimary}"></Button>
                                     <Button Width="110"
                                             Content="Удалить"

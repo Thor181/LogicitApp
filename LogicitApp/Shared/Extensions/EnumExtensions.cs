@@ -1,4 +1,5 @@
 ﻿using HandyControl.Controls;
+using LogicitApp.Data.Models;
 using LogicitApp.Views;
 using LogicitApp.Views.Shared;
 using System;

@@ -15,9 +15,12 @@ namespace LogicitApp
 {
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; private set; }
+
         public MainWindow()
         {
             InitializeComponent();
+            Instance = this;
         }
 
         public static void ChangeView(AvailableViews view)

@@ -27,6 +27,8 @@ namespace LogicitApp.Views
             InitializeComponent();
             
             ConfigHelper.Instance.SetLang("RU");
+
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU");
         }
     }
 }

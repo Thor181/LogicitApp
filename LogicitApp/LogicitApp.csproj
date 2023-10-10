@@ -14,10 +14,12 @@
     <None Remove="Resources\exit.png" />
     <None Remove="Resources\order.png" />
     <None Remove="Resources\plus.png" />
+    <None Remove="Resources\save.png" />
     <None Remove="Resources\trash.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.1" />
     <PackageReference Include="HandyControl" Version="3.4.0" />
     <PackageReference Include="HandyControl.Lang.ru" Version="3.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
@@ -43,6 +45,7 @@
     <Resource Include="Resources\plus.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\save.png" />
     <Resource Include="Resources\trash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

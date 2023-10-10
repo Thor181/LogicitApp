@@ -1,6 +1,7 @@
 ﻿using LogicitApp.Data.DataLogic;
 using LogicitApp.Data.Models;
 using LogicitApp.Data.Models.Applied;
+using LogicitApp.Shared;
 using LogicitApp.Shared.Commands;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,13 @@ namespace LogicitApp.ViewModels
 
         public ObservableCollection<AppliedOrder> Orders { get; set; } = new();
 
+        #region Commands
+
         public SimpleCommand CreateCommand { get; set; }
         public SimpleCommand DeleteCommand { get; set; }
         public SimpleCommand EditCommand { get; set; }
+
+        #endregion
 
         public MainViewModel()
         {
@@ -38,7 +43,11 @@ namespace LogicitApp.ViewModels
         public void LoadOrders()
         {
             using var orderLogic = new OrderLogic();
-            var orders = orderLogic.GetAll<Order>().Select(x => new AppliedOrder
+            var orders = orderLogic.GetAll<Order>().ToList();
+
+            Report.Generate(orders[0]);
+
+            var appliedOrders = orders.Select(x => new AppliedOrder
             {
                 Id = x.Id,
                 Products = string.Join(", ", x.OrderProducts.Select(y => y.Product.Name)),
@@ -53,7 +62,7 @@ namespace LogicitApp.ViewModels
             });
 
             Orders.Clear();
-            foreach (var item in orders)
+            foreach (var item in appliedOrders)
             {
                 Orders.Add(item);
             }
@@ -98,7 +107,13 @@ namespace LogicitApp.ViewModels
 
         private void EditHandler(object? parameter)
         {
+            var id = Convert.ToInt64(parameter);
+            using var orderLogic = new OrderLogic();
+            var order = orderLogic.Get<Order>(id);
 
+            Messenger.AddMessage(nameof(CreateOrderViewModel), order);
+
+            MainWindow.ChangeView(Views.Shared.AvailableViews.CreateOrderView);
         }
     }
 }
