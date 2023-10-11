@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace LogicitApp.Shared
 {
     public class Report
     {
+        private const int LargeFontSize = 18;
+
         public static void Generate(Order order)
         {
             using var excel = new XLWorkbook();
@@ -18,50 +21,131 @@ namespace LogicitApp.Shared
             var titleCell = worksheet.Cell("A1");
 
             titleCell.Value = "Товарно-транспортная накладная №";
-            titleCell.Style.Font.FontSize = 18;
+            titleCell.Style.Font.FontSize = LargeFontSize;
 
             var numberCell = worksheet.Range("G1", "I1");
             numberCell.Merge();
+            numberCell.Style.Font.FontSize = LargeFontSize;
+            numberCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             numberCell.Value = order.Id;
 
             var dateCell = worksheet.Range("J1", "L1");
             dateCell.Merge();
+            dateCell.Style.Font.FontSize = LargeFontSize;
+            dateCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             dateCell.Value = DateTime.Today.Date;
 
-            var senderCell = worksheet.Cell("A3");
-            senderCell.Value = "Грузоотправитель:";
+            CreateFieldWithUnderlining(worksheet, "A3", "C3", "L3", "Грузоотправитель:", "");
+            CreateFieldWithUnderlining(worksheet, "A5", "D5", "L5", "Заказчик (Плательщик):", order.Client.OrganizationName);
+            CreateFieldWithUnderlining(worksheet, "A7", "C7", "L7", "Грузополучатель:", order.Client.OrganizationName);
+            CreateFieldWithUnderlining(worksheet, "F9", "G9", "L9", "Водитель:", order.Driver.FullName);
+            CreateFieldWithUnderlining(worksheet, "A11", "C11", "F11", "Автомобиль:", $"{order.Transport.Brand} {order.Transport.Model}");
+            CreateFieldWithUnderlining(worksheet, "G11", "I11", "L11", "Гос. номер:", $"{order.Transport.PlateNumber}");
+            CreateFieldWithUnderlining(worksheet, "A13", "C13", "F13", "Пункт погрузки:", "");
+            CreateFieldWithUnderlining(worksheet, "G13", "I13", "L13", "Пункт разгрузки:", order.DeliveryAddress);
 
-            var senderRange = worksheet.Range("C3", "L3");
-            senderRange.Merge();
-            senderRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+            CreateTableHeaderCell(worksheet, "A15", "A15", "№ п/п");
+            CreateTableHeaderCell(worksheet, "B15", "H15", "Наименование продукции (груза)");
+            CreateTableHeaderCell(worksheet, "I15", "J15", "Ед. изм.");
+            CreateTableHeaderCell(worksheet, "K15", "L15", "Кол-во");
 
-            var buyerCell = worksheet.Cell("A5");
-            buyerCell.Value = "Заказчик (Плательщик):";
+            var groupedProducts = order.OrderProducts.GroupBy(x => x.Product, (x, y) => new { Product = x, Count = y.Count() });
+            var groupedProductsCount = groupedProducts.Count();
 
-            var buyerRange = worksheet.Range("D5", "L5");
-            buyerRange.Merge();
-            buyerRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
-            buyerRange.Value = order.Client.OrganizationName;
+            CreateFieldWithUnderlining(worksheet, "A18", "D18", "D18", "Всего наименований:", groupedProductsCount.ToString());
+            CreateFieldWithUnderlining(worksheet, "E18", "G18", "G18", "Масса груза (нетто):", order.OrderProducts.Sum(x => x.Product.Weight).ToString());
+            CreateFieldWithUnderlining(worksheet, "A22", "C22", "F22", "Отпуск произвел:", "");
 
-            var buyer2Cell = worksheet.Cell("A7");
-            buyer2Cell.Value = "Грузополучатель:";
+            worksheet.Column("L").Width = 25;
 
-            var buyer2Range = worksheet.Range("C7", "L7");
-            buyer2Range.Merge();
-            buyer2Range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
-            buyer2Range.Value = order.Client.OrganizationName;
+            var mp1 = worksheet.Cell("F23");
+            mp1.Value = "М.П.";
+            mp1.Style.Font.Bold = true;
 
-            var driverCell = worksheet.Cell("F9");
-            driverCell.Value = "Водитель:";
+            worksheet.Range("G18", "G22").Style.Border.RightBorder = XLBorderStyleValues.Medium;
 
-            var driverRange = worksheet.Range("G9", "L9");
-            driverRange.Merge();
-            driverRange.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
-            driverRange.Value = order.Driver.FullName;
+            CreateFieldWithUnderlining(worksheet, "H18", "L18", "L18", "Груз к перевозке принял водитель:", order.Driver.FullName);
+            CreateFieldWithUnderlining(worksheet, "H20", "L20", "L20", "Груз сдал водитель:", order.Driver.FullName);
+            CreateFieldWithUnderlining(worksheet, "H22", "L22", "L22", "Груз получил грузополучатель:", "");
+
+            var mp2 = worksheet.Cell("L23");
+            mp2.Value = "М.П.";
+            mp2.Style.Font.Bold = true;
+
+            var rowIndex = 16;
+            worksheet.Cell(rowIndex - 1, "A").WorksheetRow().InsertRowsBelow(groupedProductsCount + 1);
+
+            for (int i = 0; i < groupedProductsCount; i++)
+            {
+                var currentProduct = groupedProducts.ElementAt(i);
+
+                var tableNumberCell = worksheet.Cell("A" + rowIndex);
+                tableNumberCell.Value = i + 1;
+                tableNumberCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                SetAllBorder(XLBorderStyleValues.Thin, tableNumberCell);
+
+                var nameRange = worksheet.Range("B" + rowIndex, "H" + rowIndex);
+                nameRange.Merge();
+                nameRange.Value = currentProduct.Product.Name;
+                nameRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                SetAllBorder(XLBorderStyleValues.Thin, nameRange);
+
+                var unitRange = worksheet.Range("I" + rowIndex, "J" + rowIndex);
+                unitRange.Merge();
+                unitRange.Value = currentProduct.Product.Unit;
+                unitRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                SetAllBorder(XLBorderStyleValues.Thin, unitRange);
+
+                var countRange = worksheet.Range("K" + rowIndex, "L" + rowIndex);
+                countRange.Merge();
+                countRange.Value = currentProduct.Count;
+                countRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                SetAllBorder(XLBorderStyleValues.Thin, countRange);
+
+                rowIndex++;
+            }
+
+            worksheet.Range("A" + rowIndex, "J" + rowIndex).Merge();
+            worksheet.Range("K" + rowIndex, "L" + rowIndex).Merge().Value = groupedProducts.Sum(x => x.Count);
 
             excel.SaveAs("File.xlsx");
+        }
 
-            var JUST_BREAKPOINT = string.Empty;
+        private static void CreateTableHeaderCell(IXLWorksheet worksheet, string firstCellAddress, string lastCellAddress, string value)
+        {
+            var range = worksheet.Range(firstCellAddress, lastCellAddress);
+            range.Merge();
+            range.Value = value;
+            range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            SetAllBorder(XLBorderStyleValues.Medium, range);
+        }
+
+        private static void SetAllBorder(XLBorderStyleValues style, IXLRange range)
+        {
+            var cells = range.Cells();
+            foreach (var item in cells)
+                SetAllBorder(style, item);
+        }
+
+        private static void SetAllBorder(XLBorderStyleValues style, IXLCell cell)
+        {
+            cell.Style.Border.LeftBorder = style;
+            cell.Style.Border.TopBorder = style;
+            cell.Style.Border.RightBorder = style;
+            cell.Style.Border.BottomBorder = style;
+        }
+
+        private static void CreateFieldWithUnderlining(IXLWorksheet worksheet, string firstCellAddress,
+            string underliningStartCellAddress, string underliningEndCellAddress, string firstCellValue, string underliningValue)
+        {
+            var firstCell = worksheet.Cell(firstCellAddress);
+            firstCell.Value = firstCellValue;
+
+            var range = worksheet.Range(underliningStartCellAddress, underliningEndCellAddress);
+            range.Merge();
+            range.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+            range.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Value = underliningValue;
         }
     }
 }
