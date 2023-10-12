@@ -3,30 +3,33 @@ using LogicitApp.Data.Models;
 using LogicitApp.Data.Models.Applied;
 using LogicitApp.Shared;
 using LogicitApp.Shared.Commands;
-using System;
-using System.Collections.Generic;
+using LogicitApp.Views.Shared;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace LogicitApp.ViewModels
 {
-    public class MainViewModel : INotifyCollectionChanged
+    public class MainViewModel : INotifyCollectionChanged, INotifyPropertyChanged
     {
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ObservableCollection<AppliedOrder> Orders { get; set; } = new();
+
+        private Filter _filter = new();
+        public Filter Filter { get { return _filter; } set { _filter = value; OnPropertyChanged(); } }
 
         #region Commands
 
         public SimpleCommand CreateCommand { get; set; }
         public SimpleCommand DeleteCommand { get; set; }
         public SimpleCommand EditCommand { get; set; }
+        public SimpleCommand GenerateReportCommand { get; set; }
+        public SimpleCommand FilterCommand { get; set; }
 
         #endregion
 
@@ -35,8 +38,18 @@ namespace LogicitApp.ViewModels
             CreateCommand = new SimpleCommand(CreateHandler);
             DeleteCommand = new SimpleCommand(DeleteHandler);
             EditCommand = new SimpleCommand(EditHandler);
+            GenerateReportCommand = new SimpleCommand((e) =>
+            {
+                using var orderLogic = new OrderLogic();
+                var order = orderLogic.Get<Order>((long)e);
+                Report.Generate(order);
+            });
+
+            FilterCommand = new SimpleCommand(FilterHandler);
 
             Orders.CollectionChanged += CollectionChanged;
+
+
             LoadOrders();
         }
 
@@ -44,8 +57,6 @@ namespace LogicitApp.ViewModels
         {
             using var orderLogic = new OrderLogic();
             var orders = orderLogic.GetAll<Order>().ToList();
-
-            Report.Generate(orders[0]);
 
             var appliedOrders = orders.Select(x => new AppliedOrder
             {
@@ -70,20 +81,6 @@ namespace LogicitApp.ViewModels
 
         public void OnColumnGenerating(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-
-            //var dataGrid = (DataGrid)sender;
-            //Type collectionType = dataGrid.ItemsSource.GetType();
-            //var itemType = collectionType.GetGenericArguments().Single();
-
-            //if (e.PropertyType == typeof(System.DateTime))
-            //    (e.Column as DataGridTextColumn).Binding.StringFormat = "dd.MM.yyyy HH:mm";
-
-            //var name = MetadataInfo<IAppliedModel>.GetPropertyLocalizedName(itemType, e.PropertyName);
-
-            //if (MetadataInfo<IAppliedModel>.PropertyIsVirtual(itemType, e.PropertyName) && e.PropertyType != typeof(DateTime))
-            //    e.Cancel = true;
-
-            //e.Column.Header = name;
         }
 
         private void CreateHandler(object? parameter)
@@ -114,6 +111,25 @@ namespace LogicitApp.ViewModels
             Messenger.AddMessage(nameof(CreateOrderViewModel), order);
 
             MainWindow.ChangeView(Views.Shared.AvailableViews.CreateOrderView);
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new(prop));
+        }
+
+        private void FilterHandler(object parameter)
+        {
+            var availableValues = new FilterAvailableValues()
+            {
+                Products = Orders.SelectMany(x => x.Products.Split(", ")).Distinct().ToList(),
+                Statuses = Constants.Statuses.ToList()
+            };
+
+            var filterView = new FilterPopupView(availableValues);
+            var filter = filterView.ShowDialog(true);
+            if (filter != null)
+                Filter = filter;
         }
     }
 }

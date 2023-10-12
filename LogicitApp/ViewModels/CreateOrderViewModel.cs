@@ -1,22 +1,14 @@
-﻿using HandyControl.Properties.Langs;
-using HandyControl.Tools;
-using LogicitApp.Data.DataLogic;
+﻿using LogicitApp.Data.DataLogic;
 using LogicitApp.Data.Models;
 using LogicitApp.Shared;
 using LogicitApp.Shared.Attributes;
 using LogicitApp.Shared.Commands;
 using LogicitApp.Shared.Extensions;
 using LogicitApp.Shared.Results;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LogicitApp.ViewModels

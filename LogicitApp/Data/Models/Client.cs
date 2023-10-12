@@ -1,6 +1,4 @@
 ﻿using LogicitApp.Data.Models.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace LogicitApp.Data.Models;
 

@@ -1,0 +1,123 @@
+﻿<Window x:Class="LogicitApp.Views.Shared.FilterPopupView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogicitApp.Views.Shared"
+        xmlns:viewModel="clr-namespace:LogicitApp.ViewModels"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        Title="Фильтр"
+        d:Height="700"
+        Height="700"
+        Width="800"
+        Name="FilterViewX"
+        DataContext="{Binding ElementName=FilterViewX}"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ScrollViewer>
+
+            <StackPanel>
+                <hc:CheckComboBox Width="300"
+                                  Name="ProductsCheckCombobox"
+                                  hc:InfoElement.Title="Товары"
+                                  Style="{StaticResource CheckComboBoxExtend}"
+                                  Margin="0 5"
+                                  ItemsSource="{Binding AvailableValues.Products}">
+                </hc:CheckComboBox>
+                <hc:ComboBox Width="300"
+                             Name="StatusesCheckCombobox"
+                             hc:InfoElement.Title="Статусы"
+                             Style="{StaticResource ComboBoxExtend}"
+                             Margin="0 5"
+                             ItemsSource="{Binding AvailableValues.Statuses}"
+                             SelectedItem="{Binding Filter.Status}">
+                </hc:ComboBox>
+                <hc:TextBox Width="300"
+                            hc:InfoElement.Title="Клиент (содержит)"
+                            hc:InfoElement.TitleWidth="140"
+                            hc:InfoElement.TitlePlacement="Top"
+                            Margin="0 5"
+                            Text="{Binding Filter.Clients}">
+                </hc:TextBox>
+                <StackPanel Orientation="Horizontal"
+                            Width="408">
+
+                    <hc:DateTimePicker Width="200"
+                                       SelectedDateTime="{Binding Filter.CreatedDateTimeFrom}"
+                                       hc:InfoElement.Title="Дата заказа (от)"
+                                       Margin="2.5 5"
+                                       Style="{StaticResource DateTimePickerExtend}" />
+
+                    <hc:DateTimePicker Width="200"
+                                       SelectedDateTime="{Binding Filter.CreatedDateTimeTo}"
+                                       hc:InfoElement.Title="Дата заказа (до)"
+                                       Margin="2.5 5"
+                                       Style="{StaticResource DateTimePickerExtend}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            Width="408">
+
+                    <hc:DateTimePicker Width="200"
+                                       SelectedDateTime="{Binding Filter.DeliveryDateTimeFrom}"
+                                       hc:InfoElement.Title="Дата доставки (от)"
+                                       Margin="2.5 5"
+                                       Style="{StaticResource DateTimePickerExtend}" />
+
+                    <hc:DateTimePicker Width="200"
+                                       SelectedDateTime="{Binding Filter.DeliveryDateTimeTo}"
+                                       hc:InfoElement.Title="Дата доставки (до)"
+                                       Margin="2.5 5"
+                                       Style="{StaticResource DateTimePickerExtend}" />
+                </StackPanel>
+
+                <hc:TextBox Width="300"
+                            hc:InfoElement.Title="Адрес доставки (содержит)"
+                            hc:InfoElement.TitleWidth="140"
+                            hc:InfoElement.TitlePlacement="Top"
+                            Margin="0 5"
+                            Text="{Binding Filter.Address}">
+                </hc:TextBox>
+
+                <hc:TextBox Width="300"
+                            hc:InfoElement.Title="Водитель (содержит)"
+                            hc:InfoElement.TitleWidth="140"
+                            hc:InfoElement.TitlePlacement="Top"
+                            Margin="0 5"
+                            Text="{Binding Filter.Driver}">
+                </hc:TextBox>
+
+                <hc:TextBox Width="300"
+                            hc:InfoElement.Title="Автомобиль (содержит)"
+                            hc:InfoElement.TitleWidth="140"
+                            hc:InfoElement.TitlePlacement="Top"
+                            Margin="0 5"
+                            Text="{Binding Filter.Transport}">
+                </hc:TextBox>
+
+                <StackPanel Orientation="Horizontal"
+                            Width="308">
+
+                    <hc:NumericUpDown hc:InfoElement.Title="Сумма (от)"
+                                      Width="150"
+                                      Margin="2.5 5"
+                                      Style="{StaticResource NumericUpDownExtend}"
+                                      Value="{Binding Filter.SumFrom}" />
+
+                    <hc:NumericUpDown hc:InfoElement.Title="Сумма (до)"
+                                      Width="150"
+                                      Margin="2.5 5"
+                                      Style="{StaticResource NumericUpDownExtend}"
+                                      Value="{Binding Filter.SumTo}" />
+                </StackPanel>
+
+                <Button x:Name="ApplyButton"
+                        Content="Применить"
+                        Style="{StaticResource ButtonPrimary}"
+                        Click="ApplyButton_Click" />
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

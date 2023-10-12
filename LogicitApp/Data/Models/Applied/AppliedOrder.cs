@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogicitApp.Data.Models.Applied
+﻿namespace LogicitApp.Data.Models.Applied
 {
     public class AppliedOrder
     {
@@ -27,7 +21,5 @@ namespace LogicitApp.Data.Models.Applied
         public string Transport { get; set; }
 
         public double Sum { get; set; }
-
-        //public List<OrderProduct> OrderProducts { get; set; }
     }
 }

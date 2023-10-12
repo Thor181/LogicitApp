@@ -1,12 +1,5 @@
-﻿using HandyControl.Controls;
-using LogicitApp.Data.Models;
-using LogicitApp.Views;
+﻿using LogicitApp.Views;
 using LogicitApp.Views.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LogicitApp.Shared.Extensions

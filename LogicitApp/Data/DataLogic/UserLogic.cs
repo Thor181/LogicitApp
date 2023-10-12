@@ -1,10 +1,5 @@
 ﻿using LogicitApp.Data.Models;
 using LogicitApp.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicitApp.Data.DataLogic
 {

@@ -7,11 +7,11 @@
         xmlns:views="clr-namespace:LogicitApp.Views"
         
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="LogicitApp"
         MinHeight="500"
         MinWidth="900"
         Height="500"
-        Width="900">
+        Width="1800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid x:Name="MainLayout">
         <views:LoginView />
     </Grid>

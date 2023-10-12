@@ -1,11 +1,8 @@
 ﻿using ClosedXML.Excel;
 using LogicitApp.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using Microsoft.Win32;
+using Spire.Xls;
+using System.IO;
 
 namespace LogicitApp.Shared
 {
@@ -108,7 +105,27 @@ namespace LogicitApp.Shared
             worksheet.Range("A" + rowIndex, "J" + rowIndex).Merge();
             worksheet.Range("K" + rowIndex, "L" + rowIndex).Merge().Value = groupedProducts.Sum(x => x.Count);
 
-            excel.SaveAs("File.xlsx");
+            worksheet.PageSetup.PrintAreas.Clear();
+            worksheet.PageSetup.Scale = 70;
+            worksheet.PageSetup.PrintAreas.Add(worksheet.FirstCellUsed().Address, worksheet.LastCellUsed().Address);
+
+            excel.SaveAs("x.xlsx");
+
+            using var ms = new MemoryStream();
+            excel.SaveAs(ms);
+
+            var wb = new Workbook();
+            wb.LoadFromStream(ms);
+
+            var sfd = new SaveFileDialog
+            {
+                Filter = "*.pdf|*.pdf"
+            };
+
+            if (sfd.ShowDialog() == true)
+            {
+                wb.SaveToFile(sfd.FileName);
+            }
         }
 
         private static void CreateTableHeaderCell(IXLWorksheet worksheet, string firstCellAddress, string lastCellAddress, string value)
