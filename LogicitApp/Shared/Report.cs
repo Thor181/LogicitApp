@@ -102,7 +102,10 @@ namespace LogicitApp.Shared
                 rowIndex++;
             }
 
-            worksheet.Range("A" + rowIndex, "J" + rowIndex).Merge();
+            var sumRange = worksheet.Range("A" + rowIndex, "J" + rowIndex).Merge();
+            sumRange.Value = "ИТОГО:";
+            sumRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
             worksheet.Range("K" + rowIndex, "L" + rowIndex).Merge().Value = groupedProducts.Sum(x => x.Count);
 
             worksheet.PageSetup.PrintAreas.Clear();
