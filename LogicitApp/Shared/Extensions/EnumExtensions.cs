@@ -1,4 +1,5 @@
 ﻿using LogicitApp.Views;
+using LogicitApp.Views.AppliedEntities;
 using LogicitApp.Views.Shared;
 using System.Windows;
 
@@ -13,6 +14,7 @@ namespace LogicitApp.Shared.Extensions
                 AvailableViews.LoginView => new LoginView(),
                 AvailableViews.MainView => new MainView(),
                 AvailableViews.CreateOrderView => new CreateOrderView(),
+                AvailableViews.ProductsView => new ProductsView(),
                 _ => throw new NotImplementedException()
             };
         }

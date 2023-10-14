@@ -16,7 +16,9 @@
     <None Remove="Resources\filter.png" />
     <None Remove="Resources\order.png" />
     <None Remove="Resources\plus.png" />
+    <None Remove="Resources\remove.png" />
     <None Remove="Resources\save.png" />
+    <None Remove="Resources\save2.png" />
     <None Remove="Resources\trash.png" />
   </ItemGroup>
 
@@ -53,7 +55,9 @@
     <Resource Include="Resources\plus.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\remove.png" />
     <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\save2.png" />
     <Resource Include="Resources\trash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

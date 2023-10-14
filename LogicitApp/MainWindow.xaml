@@ -16,10 +16,7 @@
         x:Name="MainWindowX"
         xmlns:shared="clr-namespace:LogicitApp.Shared"
         DataContext="{Binding ElementName=MainWindowX}">
-    <Window.Resources>
-    </Window.Resources>
-
-    <Grid >
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="1*" />
@@ -31,7 +28,7 @@
                            CommandParameter="{x:Static shared:StaticAvailableViews.MainViewEnum}" />
                 <MenuItem  Header="Товары"
                            Command="{Binding ChangeViewCommand}"
-                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                           CommandParameter="{x:Static shared:StaticAvailableViews.ProductsView}" />
                 <MenuItem  Header="Транспорт"
                            Command="{Binding ChangeViewCommand}"
                            CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />

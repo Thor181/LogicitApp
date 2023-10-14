@@ -9,7 +9,14 @@ namespace LogicitApp
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private bool _menuIsEnabled = false;
-        public bool MenuIsEnabled { get => _menuIsEnabled; set { _menuIsEnabled = value; PropertyChanged?.Invoke(this, new(nameof(MenuIsEnabled))); } }
+        public bool MenuIsEnabled
+        {
+            get => _menuIsEnabled; set
+            {
+                _menuIsEnabled = value;
+                PropertyChanged?.Invoke(this, new(nameof(MenuIsEnabled)));
+            }
+        }
 
         public SimpleCommand ChangeViewCommand { get; set; }
 
@@ -29,7 +36,7 @@ namespace LogicitApp
         {
             ChangeView((AvailableViews)view);
         }
-         
+
         public static void ChangeView(AvailableViews view)
         {
             var mw = (MainWindow)App.Current.MainWindow;
