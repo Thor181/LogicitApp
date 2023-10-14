@@ -1,33 +1,42 @@
-﻿using LogicitApp.Shared.Extensions;
+﻿using LogicitApp.Shared.Commands;
+using LogicitApp.Shared.Extensions;
 using LogicitApp.Views.Shared;
-using System.Text;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LogicitApp
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private bool _menuIsEnabled = false;
+        public bool MenuIsEnabled { get => _menuIsEnabled; set { _menuIsEnabled = value; PropertyChanged?.Invoke(this, new(nameof(MenuIsEnabled))); } }
+
+        public SimpleCommand ChangeViewCommand { get; set; }
+
         public static MainWindow Instance { get; private set; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindow()
         {
+            ChangeViewCommand = new SimpleCommand(ChangeView);
+
             InitializeComponent();
             Instance = this;
         }
 
+        public void ChangeView(object? view)
+        {
+            ChangeView((AvailableViews)view);
+        }
+         
         public static void ChangeView(AvailableViews view)
         {
             var mw = (MainWindow)App.Current.MainWindow;
             mw.MainLayout.Children.Clear();
             mw.MainLayout.Children.Add(view.View());
+
+            mw.MenuIsEnabled = view != AvailableViews.LoginView;
         }
     }
 }

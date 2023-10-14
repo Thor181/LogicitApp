@@ -5,14 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogicitApp"
         xmlns:views="clr-namespace:LogicitApp.Views"
-        
         mc:Ignorable="d"
         Title="LogicitApp"
         MinHeight="500"
         MinWidth="900"
         Height="500"
-        Width="1800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
-    <Grid x:Name="MainLayout">
-        <views:LoginView />
+        Width="1800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        x:Name="MainWindowX"
+        xmlns:shared="clr-namespace:LogicitApp.Shared"
+        DataContext="{Binding ElementName=MainWindowX}">
+    <Window.Resources>
+    </Window.Resources>
+
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        
+            <Menu Grid.Row="0" IsEnabled="{Binding MenuIsEnabled}">
+                <MenuItem  Header="Заказы"
+                           Command="{Binding ChangeViewCommand}"
+                           CommandParameter="{x:Static shared:StaticAvailableViews.MainViewEnum}" />
+                <MenuItem  Header="Товары"
+                           Command="{Binding ChangeViewCommand}"
+                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                <MenuItem  Header="Транспорт"
+                           Command="{Binding ChangeViewCommand}"
+                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                <MenuItem  Header="Водители"
+                           Command="{Binding ChangeViewCommand}"
+                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                <MenuItem  Header="Клиенты"
+                           Command="{Binding ChangeViewCommand}"
+                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+            </Menu>
+            <Grid  x:Name="MainLayout" Grid.Row="1">
+                <views:LoginView />
+            </Grid>
     </Grid>
 </Window>

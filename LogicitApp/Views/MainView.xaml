@@ -87,7 +87,8 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id"
                                         Binding="{Binding Id}"></DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Товары"
+                    
+                    <!--<DataGridTemplateColumn Header="Товары"
                                             MaxWidth="500">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -97,7 +98,8 @@
                                 </WrapPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    </DataGridTemplateColumn>-->
+                    
                     <DataGridTextColumn Header="Клиент"
                                         Binding="{Binding Client}">
                     </DataGridTextColumn>

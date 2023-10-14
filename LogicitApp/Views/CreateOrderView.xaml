@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:LogicitApp.Views"
              xmlns:viewModel="clr-namespace:LogicitApp.ViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:converters="clr-namespace:LogicitApp.Shared.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="900"
@@ -15,6 +16,10 @@
         <viewModel:CreateOrderViewModel />
     </UserControl.DataContext>
 
+    <UserControl.Resources>
+        <converters:StringToIntConverter x:Key="StringToIntConverter" />
+    </UserControl.Resources>
+    
     <Grid d:Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -133,11 +138,13 @@
                 <StackPanel Grid.Column="0"
                             Margin="5">
 
-                    <hc:TextBox Height="60"
-                                hc:InfoElement.ShowClearButton="True"
-                                hc:InfoElement.Title="Адрес доставки"
-                                hc:InfoElement.Necessary="True"
-                                Text="{Binding SelectedAddress}" />
+                    <hc:ComboBox Height="60"
+                                 ItemsSource="{Binding Addresses}"
+                                 hc:InfoElement.TitleWidth="140"
+                                 hc:InfoElement.TitlePlacement="Top"
+                                 hc:InfoElement.Title="Адрес доставки"
+                                 hc:InfoElement.Necessary="True"
+                                 SelectedValue="{Binding SelectedAddress}" />
 
                     <hc:DateTimePicker Height="60"
                                        ShowClearButton="True"
@@ -235,17 +242,27 @@
 
                         <DataGridTextColumn Header="Наименование"
                                             Width="1*"
-                                            Binding="{Binding Name}" />
+                                            Binding="{Binding Product.Name}" />
                         <DataGridTextColumn Header="Цена"
                                             Width="1*"
-                                            Binding="{Binding Price}" />
+                                            Binding="{Binding Product.Price}" />
+                        
+                        <DataGridTemplateColumn Header="Количество">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <!--<TextBox Text="{Binding Count, Converter={StaticResource StringToIntConverter}}" />-->
+                                    <hc:NumericUpDown Minimum="1" Value="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
                         <DataGridTemplateColumn Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="Удалить"
                                             Style="{StaticResource ButtonDanger}"
                                             Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.RemoveProductCommand}"
-                                            CommandParameter="{Binding Id}" />
+                                            CommandParameter="{Binding Product.Id}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

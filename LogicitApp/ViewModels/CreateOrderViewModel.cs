@@ -1,5 +1,6 @@
 ﻿using LogicitApp.Data.DataLogic;
 using LogicitApp.Data.Models;
+using LogicitApp.Data.Models.Applied;
 using LogicitApp.Shared;
 using LogicitApp.Shared.Attributes;
 using LogicitApp.Shared.Commands;
@@ -25,6 +26,7 @@ namespace LogicitApp.ViewModels
         public List<Driver> Drivers { get; set; }
         public List<Transport> Transports { get; set; }
         public List<Product> Products { get; set; }
+        public List<string> Addresses { get; set; }
 
         #endregion
 
@@ -39,6 +41,7 @@ namespace LogicitApp.ViewModels
 
         #region Selected values
         public Product SelectedProduct { get; set; }
+        public int TempCount { get; set; }
 
         [Validation("Клиент", typeof(Client))]
         public Client SelectedClient { get; set; }
@@ -50,7 +53,7 @@ namespace LogicitApp.ViewModels
         public Transport SelectedTransport { get; set; }
 
         [Validation("Товары", typeof(ObservableCollection<>))]
-        public ObservableCollection<Product> SelectedProducts { get; set; } = new();
+        public ObservableCollection<AppliedProductCount> SelectedProducts { get; set; } = new();
 
         [Validation("Статус", typeof(string))]
         public string SelectedStatus { get; set; }
@@ -61,7 +64,7 @@ namespace LogicitApp.ViewModels
         [Validation("Адрес доставки", typeof(string))]
         public string SelectedAddress { get; set; }
 
-        public double SelectedSum => SelectedProducts.Sum(x => x.Price) ?? 0d;
+        public double SelectedSum => SelectedProducts.Sum(x => x.Product.Price * x.Count) ?? 0d;
         #endregion
 
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
@@ -73,16 +76,15 @@ namespace LogicitApp.ViewModels
 
             AddProductCommand = new SimpleCommand(x =>
             {
-
                 if (SelectedProduct == null)
                     return;
 
-                SelectedProducts.Add(SelectedProduct);
+                SelectedProducts.Add(new AppliedProductCount() { Product = SelectedProduct, Count = 1 });
             });
 
             RemoveProductCommand = new SimpleCommand(x =>
             {
-                var p = SelectedProducts.FirstOrDefault(y => y.Id == (long)x);
+                var p = SelectedProducts.FirstOrDefault(y => y.Product.Id == (long)x);
                 if (p != null)
                     SelectedProducts.Remove(p);
             });
@@ -110,12 +112,12 @@ namespace LogicitApp.ViewModels
                 SelectedDeliveryDatetime = Convert.ToDateTime(existedOrder.DeliveryDatetime);
                 SelectedAddress = existedOrder.DeliveryAddress ?? "";
 
-                var products = existedOrder.OrderProducts.Select(x => x.Product).ToList();
-                foreach (var item in products)
+                var groupProducts = existedOrder.OrderProducts.GroupBy(x => x.Product, (x, y) => new AppliedProductCount() { Product = x, Count = y.Count() });
+                foreach (var item in groupProducts)
                 {
-                    var persistentProduct = Products.FirstOrDefault(x => x.Id == item.Id);
+                    var persistentProduct = Products.FirstOrDefault(x => x.Id == item.Product.Id);
                     if (persistentProduct != null)
-                        SelectedProducts.Add(persistentProduct);
+                        SelectedProducts.Add(new AppliedProductCount() { Product = persistentProduct, Count = item.Count });
                 }
 
                 ExistedOrderId = existedOrder.Id;
@@ -124,7 +126,25 @@ namespace LogicitApp.ViewModels
 
         private void SelectedProducts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?.Count > 0)
+            {
+                var changedEntities = e.NewItems.Cast<AppliedProductCount>().ToList();
+                foreach (var item in changedEntities)
+                    item.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(s, e); SumPropertyChanged(); };
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                var changedEntities = e.OldItems.Cast<AppliedProductCount>().ToList();
+                foreach (var item in changedEntities)
+                    item.PropertyChanged -= (s, e) => { PropertyChanged?.Invoke(s, e); SumPropertyChanged(); };
+            }
             CollectionChanged?.Invoke(sender, e);
+            SumPropertyChanged();
+        }
+
+        private void SumPropertyChanged()
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedSum)));
         }
 
@@ -141,6 +161,9 @@ namespace LogicitApp.ViewModels
 
             using var productLogic = new ProductLogic();
             Products = new List<Product>(productLogic.GetAll<Product>());
+
+            using var orderLogic = new OrderLogic();
+            Addresses = new List<string>(orderLogic.GetAll<Order>().Select(x => x.DeliveryAddress ?? "").Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList());
         }
 
         private void SaveHandler(object? parameter)
@@ -173,15 +196,19 @@ namespace LogicitApp.ViewModels
 
                 order.OrderProducts.Clear();
                 var orderProducts = new List<OrderProduct>();
+
                 foreach (var item in SelectedProducts)
                 {
-                    var orderProduct = new OrderProduct()
+                    for (int i = 0; i < item.Count; i++)
                     {
-                        OrderId = ExistedOrderId,
-                        ProductId = item.Id
-                    };
+                        var orderProduct = new OrderProduct()
+                        {
+                            OrderId = ExistedOrderId,
+                            ProductId = item.Product.Id
+                        };
 
-                    order.OrderProducts.Add(orderProduct);
+                        order.OrderProducts.Add(orderProduct);
+                    }
                 }
 
                 result = orderLogic.Update<Order>(order);
@@ -199,7 +226,16 @@ namespace LogicitApp.ViewModels
                     Sum = SelectedSum,
                     TransportId = SelectedTransport.Id,
                 };
-                result = orderLogic.AddOrder(order, SelectedProducts);
+
+                var products = new List<Product>();
+
+                foreach (var item in SelectedProducts)
+                {
+                    for (int i = 0; i < item.Count; i++)
+                        products.Add(item.Product);
+                }
+
+                result = orderLogic.AddOrder(order, products);
             }
 
             MessageBox.Show(result.Message);

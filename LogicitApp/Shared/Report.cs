@@ -42,7 +42,8 @@ namespace LogicitApp.Shared
             CreateFieldWithUnderlining(worksheet, "G13", "I13", "L13", "Пункт разгрузки:", order.DeliveryAddress);
 
             CreateTableHeaderCell(worksheet, "A15", "A15", "№ п/п");
-            CreateTableHeaderCell(worksheet, "B15", "H15", "Наименование продукции (груза)");
+            CreateTableHeaderCell(worksheet, "B15", "F15", "Наименование продукции (груза)");
+            CreateTableHeaderCell(worksheet, "G15", "H15", "Цена за ед.");
             CreateTableHeaderCell(worksheet, "I15", "J15", "Ед. изм.");
             CreateTableHeaderCell(worksheet, "K15", "L15", "Кол-во");
 
@@ -50,6 +51,8 @@ namespace LogicitApp.Shared
             var groupedProductsCount = groupedProducts.Count();
 
             CreateFieldWithUnderlining(worksheet, "A18", "D18", "D18", "Всего наименований:", groupedProductsCount.ToString());
+            CreateFieldWithUnderlining(worksheet, "A20", "C20", "F20", "Итого стоимость:", order.OrderProducts.Sum(x => x.Product.Price).ToString());
+            worksheet.Cell("G20").Value = "руб.";
             CreateFieldWithUnderlining(worksheet, "E18", "G18", "G18", "Масса груза (нетто):", order.OrderProducts.Sum(x => x.Product.Weight).ToString());
             CreateFieldWithUnderlining(worksheet, "A22", "C22", "F22", "Отпуск произвел:", "");
 
@@ -68,6 +71,7 @@ namespace LogicitApp.Shared
             var mp2 = worksheet.Cell("L23");
             mp2.Value = "М.П.";
             mp2.Style.Font.Bold = true;
+            mp2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             var rowIndex = 16;
             worksheet.Cell(rowIndex - 1, "A").WorksheetRow().InsertRowsBelow(groupedProductsCount + 1);
@@ -81,11 +85,17 @@ namespace LogicitApp.Shared
                 tableNumberCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 SetAllBorder(XLBorderStyleValues.Thin, tableNumberCell);
 
-                var nameRange = worksheet.Range("B" + rowIndex, "H" + rowIndex);
+                var nameRange = worksheet.Range("B" + rowIndex, "F" + rowIndex);
                 nameRange.Merge();
                 nameRange.Value = currentProduct.Product.Name;
                 nameRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 SetAllBorder(XLBorderStyleValues.Thin, nameRange);
+
+                var priceRange = worksheet.Range("G" + rowIndex, "H" + rowIndex);
+                priceRange.Merge();
+                priceRange.Value = currentProduct.Product.Price;
+                priceRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                SetAllBorder(XLBorderStyleValues.Thin, priceRange);
 
                 var unitRange = worksheet.Range("I" + rowIndex, "J" + rowIndex);
                 unitRange.Merge();
