@@ -1,9 +1,11 @@
-﻿using LogicitApp.Data.DataLogic;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using LogicitApp.Data.DataLogic;
 using LogicitApp.Data.Models;
 using LogicitApp.Shared.Commands;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,8 +50,7 @@ namespace LogicitApp.ViewModels
 
         public void AddHandler(object? parameter)
         {
-
-            var JUST_BREAKPOINT = string.Empty;
+            Products.Add(new Product());
         }
 
         public void RemoveHandler(object? parameter)
@@ -85,18 +86,34 @@ namespace LogicitApp.ViewModels
 
         public void CellEdit(object sender, DataGridCellEditEndingEventArgs e)
         {
-            var a = (sender as DataGrid)?.Items;
-
             var updatedEntity = e.Row.Item as Product;
-
+            
             if (updatedEntity == null)
+                return;
+
+            var prop = updatedEntity.GetType().GetProperty(e.Column.SortMemberPath, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            var propType = prop.PropertyType.NonNullable();
+            var converted = Convert.ChangeType(((TextBox)e.EditingElement).Text, propType);
+
+            prop.SetValue(updatedEntity, converted);
+
+            var props = updatedEntity?.GetType()
+                .GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
+                .Where(x => x.GetGetMethod()?.IsVirtual == false);
+
+            if (props?.Any(x => x.GetValue(updatedEntity) == null) == true)
                 return;
 
             using var productLogic = new ProductLogic();
 
-            var result = productLogic.Update(updatedEntity);
+            var result = productLogic.Update(updatedEntity!);
 
-            var JUST_BREAKPOINT = string.Empty;
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")

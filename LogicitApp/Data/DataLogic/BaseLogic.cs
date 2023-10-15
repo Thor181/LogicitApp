@@ -45,17 +45,17 @@ namespace LogicitApp.Data.DataLogic
             DbContext.Add(entity);
         }
 
-        public IQueryable<T> GetAll<T>(Expression<Func<T, bool>> predicate) where T : class, IDbEntity
+        public virtual IQueryable<T> GetAll<T>(Expression<Func<T, bool>> predicate) where T : class, IDbEntity
         {
             return DbContext.Set<T>().Where(predicate);
         }
 
-        public IQueryable<T> GetAll<T>() where T : class, IDbEntity
+        public virtual IQueryable<T> GetAll<T>() where T : class, IDbEntity
         {
             return DbContext.Set<T>();
         }
 
-        public T Get<T>(long id) where T : class, IDbEntity
+        public virtual T Get<T>(long id) where T : class, IDbEntity
         {
             return DbContext.Set<T>().SingleOrDefault(x => x.Id == id);
         }
@@ -103,7 +103,7 @@ namespace LogicitApp.Data.DataLogic
             return result;
         }
 
-        public BaseResult Update<T>(T entity) where T : class, IDbEntity
+        public virtual BaseResult Update<T>(T entity) where T : class, IDbEntity
         {
             var result = new BaseResult() {  Message = "Успешно обновлено" };
 

@@ -27,10 +27,5 @@ namespace LogicitApp.Views.AppliedEntities
         {
             ((ProductsViewModel)this.DataContext).CellEdit(sender, e);
         }
-
-        private void MainDataGrid_CurrentCellChanged(object sender, EventArgs e)
-        {
-            //((ProductsViewModel)this.DataContext).CellEdit(sender, e);
-        }
     }
 }

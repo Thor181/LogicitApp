@@ -13,5 +13,6 @@ namespace LogicitApp.Data.DataLogic
 
             return entity.OrderProducts.Any();
         }
+
     }
 }
