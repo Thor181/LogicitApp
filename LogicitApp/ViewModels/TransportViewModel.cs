@@ -3,7 +3,8 @@ using LogicitApp.Data.Models;
 
 namespace LogicitApp.ViewModels
 {
-    public class ProductsViewModel : AppliedEntityBaseViewModel<Product, ProductLogic>
+    public class TransportViewModel : AppliedEntityBaseViewModel<Transport, TransportLogic>
     {
+
     }
 }

@@ -31,13 +31,13 @@
                            CommandParameter="{x:Static shared:StaticAvailableViews.ProductsView}" />
                 <MenuItem  Header="Транспорт"
                            Command="{Binding ChangeViewCommand}"
-                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                           CommandParameter="{x:Static shared:StaticAvailableViews.TransportView}" />
                 <MenuItem  Header="Водители"
                            Command="{Binding ChangeViewCommand}"
-                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                           CommandParameter="{x:Static shared:StaticAvailableViews.DriversView}" />
                 <MenuItem  Header="Клиенты"
                            Command="{Binding ChangeViewCommand}"
-                           CommandParameter="{x:Static shared:StaticAvailableViews.CreateOrderViewEnum}" />
+                           CommandParameter="{x:Static shared:StaticAvailableViews.ClientsView}" />
             </Menu>
             <Grid  x:Name="MainLayout" Grid.Row="1">
                 <views:LoginView />

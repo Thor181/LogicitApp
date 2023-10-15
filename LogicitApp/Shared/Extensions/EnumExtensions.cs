@@ -15,6 +15,10 @@ namespace LogicitApp.Shared.Extensions
                 AvailableViews.MainView => new MainView(),
                 AvailableViews.CreateOrderView => new CreateOrderView(),
                 AvailableViews.ProductsView => new ProductsView(),
+                AvailableViews.DriversView => new DriversView(),
+                AvailableViews.TransportView => new TransportView(),
+                AvailableViews.ClientsView => new ClientsView(),
+
                 _ => throw new NotImplementedException()
             };
         }

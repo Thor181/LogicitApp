@@ -152,6 +152,7 @@ namespace LogicitApp.ViewModels
         {
             using var clientLogic = new ClientLogic();
             Clients = new List<Client>(clientLogic.GetAll<Client>());
+            Addresses = new List<string>(clientLogic.GetAll<Client>().Select(x => x.Address ?? "").Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList());
 
             using var driverLogic = new DriverLogic();
             Drivers = new List<Driver>(driverLogic.GetAll<Driver>());
@@ -161,9 +162,6 @@ namespace LogicitApp.ViewModels
 
             using var productLogic = new ProductLogic();
             Products = new List<Product>(productLogic.GetAll<Product>());
-
-            using var orderLogic = new OrderLogic();
-            Addresses = new List<string>(orderLogic.GetAll<Order>().Select(x => x.DeliveryAddress ?? "").Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList());
         }
 
         private void SaveHandler(object? parameter)

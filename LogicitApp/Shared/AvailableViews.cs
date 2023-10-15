@@ -7,8 +7,10 @@ namespace LogicitApp.Views.Shared
         LoginView,
         MainView,
         CreateOrderView,
-        //AppliedEntityView
-        ProductsView
+        ProductsView,
+        DriversView,
+        TransportView,
+        ClientsView
     }
 }
 
@@ -20,6 +22,8 @@ namespace LogicitApp.Shared
         public static AvailableViews MainViewEnum => AvailableViews.MainView;
         public static AvailableViews CreateOrderViewEnum => AvailableViews.CreateOrderView;
         public static AvailableViews ProductsView => AvailableViews.ProductsView;
-        //public static AvailableViews AppliedEntityView => AvailableViews.AppliedEntityView;
+        public static AvailableViews DriversView => AvailableViews.DriversView;
+        public static AvailableViews TransportView => AvailableViews.TransportView;
+        public static AvailableViews ClientsView => AvailableViews.ClientsView;
     }
 }
